@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 public class KeyListenerFrame extends JFrame implements
         KeyListener, MouseListener {
     JLabel label1;
+    boolean clicked=false;
     public void KeyListenerExampleFrame(){
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Working with Key and Mouse Listeners");
@@ -20,33 +21,52 @@ public class KeyListenerFrame extends JFrame implements
         label1.setBackground(Color.BLUE);
         label1.setOpaque(true);
         add(label1);
-        addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
+        this.addKeyListener(this);
+        label1.addMouseListener(this);
+        this.addMouseListener(this);
 
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-
-            }
-        });
 //add key and mouse listeners to the elements
+    }
+    @Override
+    public void keyTyped(KeyEvent e) {
+
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void keyPressed(KeyEvent e) {
+        switch(e.getKeyCode()){
+            case 37:
+            case 65:
+                label1.setLocation(label1.getX()-10, label1.getY());
+                break;
+            case 38:
+            case 87:
+                label1.setLocation(label1.getX(), label1.getY()-10);
+                break;
+            case 39:
+            case 68:
+                label1.setLocation(label1.getX()+10, label1.getY());
+                break;
+            case 40:
+            case 83:
+                label1.setLocation(label1.getX(), label1.getY()+10);
+                break;
+        }
 
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        clicked=true;
+        label1.setLocation(e.getXOnScreen(),e.getYOnScreen());
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-
     }
 
     @Override
@@ -56,28 +76,32 @@ public class KeyListenerFrame extends JFrame implements
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+           if (e.getY() > label1.getY()) {
+               label1.setLocation(e.getX(), e.getY() - 100);
+           }
+           if (e.getX() > label1.getX()) {
+               label1.setLocation(e.getX() - 100, e.getY() - 100);
+           }
+           if (e.getX() < label1.getX()) {
+               label1.setLocation(e.getX() + 100, e.getY() + 100);
+           }
+           if (e.getY() < label1.getY()) {
+               label1.setLocation(e.getX() + 100, e.getY() + 100);
+           }
+            label1.setBackground(Color.green);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        label1.setLocation(0,0);
+        label1.setBackground(Color.BLUE);
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-
+    public static void main(String[] args) {
+        KeyListenerFrame  myFrame=new KeyListenerFrame();
+        myFrame.KeyListenerExampleFrame();
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
     //Override necessary methods for the interfaces here
 //make the label move as you move the arrow keys on the keyboard.
     //Use e.getKeyCode()method of the event.
